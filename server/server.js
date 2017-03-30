@@ -7,6 +7,7 @@ let session = require('express-session');
 let passport = require('./middleware/initPassport');
 let path = require('path');
 let handler = require('./routes/request_handler');
+let gateway = require('./gateway.js')
 
 let port = process.env.PORT || 8080;
 let app = express();
@@ -59,8 +60,28 @@ app.get('/test', passport.authenticate('facebook-token'), function(req, res) {
   }
 });
 
-app.get('*', handler.wildCard);
+// app.get('*', handler.wildCard);
 
+app.use('/addfunds', express.static(path.join(__dirname, '../src/client/app/addfunds.html')));
+
+app.get('/client_token', function (req, res) {
+  gateway.clientToken.generate({}, function (err, response) {
+    res.send(response.clientToken);
+  });
+});
+
+app.post('/checkout', function (req, res) {
+  var nonceFromTheClient = req.body.nonce;
+
+  gateway.transaction.sale({
+    amount: "5.00",
+    paymentMethodNonce: "fake-valid-nonce",
+    options: {
+      submitForSettlement: true
+    }
+  }, function (err, result) {
+  });
+});
 
 app.listen(port, function() {
   console.log('we are now listening on: ' + port);
