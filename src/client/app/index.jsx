@@ -19,7 +19,7 @@ class App extends React.Component {
       userName: '',
       ownerEvents: [],
       friendEvents: [],
-      successfulLogin: false
+      successfulLogin: false,
     }
 
     this.getUsers = this.getUsers.bind(this);

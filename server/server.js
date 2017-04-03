@@ -32,6 +32,8 @@ app.use('/', express.static(path.join(__dirname, '../src/client')));
 
 app.get('/events', passport.authenticate('facebook-token'), handler.getEvents);
 
+app.post('/confirmedUsers', passport.authenticate('facebook-token'), handler.confirmedUsers);
+
 app.get('/users', handler.getUsers);
 
 app.post('/events/users', passport.authenticate('facebook-token'), handler.addUsersEvents);
@@ -62,6 +64,85 @@ app.get('/test', passport.authenticate('facebook-token'), function(req, res) {
 app.post('/sms/remind', handler.sendSms);
 
 app.get('*', handler.wildCard);
+
+app.use('/donate', express.static(path.join(__dirname, '../src/client/app/donate.html')));
+app.use('/createStripeAccount', express.static(path.join(__dirname, '../src/client/app/createStripeAccount.html')));
+
+
+// Set your secret key: remember to change this to your live secret key in production
+// See your keys here: https://dashboard.stripe.com/account/apikeys
+let stripe = require("stripe")("sk_test_OK8yxHtRa4gbHYxACgjDireW");
+
+// ---------- organizer route ----------
+
+var acct_ids = {};
+
+app.post('/createManagedAccount', function(req, res) {
+  var organizer = req.body;
+
+  var account = stripe.accounts.create({
+    managed: true,
+    country: 'US',
+    external_account: {
+      object: "bank_account",
+      country: "US",
+      currency: "usd",
+      routing_number: "110000000",
+      account_number: "000123456789",
+    },
+    tos_acceptance: {
+      date: 1491016016,
+      ip: "199.87.82.66"
+    },
+    legal_entity: {
+      dob: {
+        day: 10,
+        month: 1,
+        year: 1986
+      },
+      first_name: organizer.name,
+      last_name: "Deng",
+      type: "individual",
+      address: {
+        line1: "1234 Main Street",
+        postal_code: 94111,
+        city: "San Francisco",
+        state: "CA"
+      },
+      personal_id_number: "000000000",
+    }
+  }, function(err, account) {
+    acct_ids[account.legal_entity.first_name] = account.id;
+  });
+  res.end();
+});
+
+app.get('/payments', function(req, res) {
+  var transactions = stripe.balance.listTransactions({
+    stripe_account: acct_ids["David"],
+  }, function(err, transactions) {
+    // asynchronously called
+  });
+  res.end();
+});
+
+// ---------- attendee route ----------
+
+app.post('/checkout', function(req, res) {
+  var token = req.body.id;
+  var organizer = req.body.card.name;
+
+  var charge = stripe.charges.create({
+    amount: 500,
+    currency: "usd",
+    description: "test payment",
+    source: token,
+    destination: acct_ids[organizer]
+  }, function(err, charge) {
+    // asynchronously called
+  });
+  res.end();
+})
 
 // io.on('connection', function (socket) {
 //   console.log('inside connectionYEAHBUDDY');

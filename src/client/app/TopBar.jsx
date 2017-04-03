@@ -1,21 +1,66 @@
 import React from 'react';
+import $ from 'jquery';
+import LogoutButton from './LogoutButton.jsx';
 
 class TopBar extends React.Component{
   constructor(props){
     super(props);
-    this.state={
-
+    this.state = {
+      users: 0,
+      accepted: 0,
+      pending: 0,
+      rejected: 0,
+      percentage: "0"
     }
   }
+
+  getConfirmedUsers(event_id) {
+    let context = this;
+
+    $.ajax({
+      url: '/confirmedUsers',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({event_id: event_id}),
+      success: function(data) {
+        var countStatus = function(status) {
+          var counter = 0;
+          for (var i = 0; i < data.length; i++) {
+            if (data[i].current_status === status) {
+              counter++
+            }
+          }
+          return counter;
+        }
+
+        context.setState({
+          users: data.length,
+          accepted: countStatus('accepted'),
+          pending: countStatus('pending'),
+          rejected: countStatus('rejected'),
+          percentage: String(Math.floor(100*countStatus('accepted')/data.length))
+        })
+      },
+      error: function(err) {
+        console.error('error in request for confirmed users', err);
+      }
+    })
+  }
+
+  componentDidMount() {
+    this.getConfirmedUsers(this.props.event.event_id);
+  }
+
   render(){
     if (this.props.event) {
-      return( 
+      return(
         <div className='topBar'>
-          <span>#{this.props.event.title}</span>
+          <LogoutButton />
+          <h1>#{this.props.event.title}</h1>
           <div className="progress">
-            <span className="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-              <span className="sr-only">60% Complete</span>
-            </span>
+            <div className="progress-bar" role="progressbar" aria-valuenow={this.state.percentage} aria-valuemin="0" aria-valuemax="100" style={{width: this.state.percentage + '%'}}>
+              {this.state.percentage}% Complete
+            </div>
           </div>
         </div>
       )
@@ -30,3 +75,5 @@ class TopBar extends React.Component{
 }
 
 export default TopBar;
+
+//{'Confirmed Users: ' + this.state.confirmedUsers.length}

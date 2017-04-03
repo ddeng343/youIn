@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Payments</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles-david.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
+  <body class="donate">
+    <form class="form" action="/createManagedAccount" method="post">
+      <div class="group">
+        <div>
+          <br/>
+          <span>Contact Information</span>
+          <br/>
+        </div>
+        <label>
+          <span>Name</span>
+          <input name="name" class="field" placeholder="Jane Doe" />
+        </label>
+        <label>
+          <span>Phone</span>
+          <input class="field" placeholder="(123) 456-7890" type="tel" />
+        </label>
+        <label>
+          <span>Email</span>
+          <input class="field" placeholder="jane.doe@hackreactor.com" />
+        </label>
+      </div>
+      <div class="group">
+        <div>
+          <br/>
+          <span>Billing Address</span>
+          <br/>
+        </div>
+        <label>
+          <span>Address</span>
+          <input class="field" placeholder="944 Market Street, 8th Floor" />
+        </label>
+        <label>
+          <span>City</span>
+          <input class="field" placeholder="San Francisco" />
+        </label>
+        <label>
+          <span>State</span>
+          <input class="field" placeholder="CA" />
+        </label>
+        <label>
+          <span>Zip Code</span>
+          <input class="field" placeholder="94102" />
+        </label>
+      </div>
+      <div class="group">
+        <div>
+          <br/>
+          <span>Banking Information</span>
+          <br/>
+        </div>
+        <label>
+          <span>Routing Num</span>
+          <input class="field" placeholder="110000000" />
+        </label>
+        <label>
+          <span>Account Num</span>
+          <input class="field" placeholder="000123456789" />
+        </label>
+      </div>
+      <button type="submit">Submit</button>
+      <div class="outcome">
+        <div class="error"></div>
+        <div class="success">
+        </div>
+      </div>
+    </form>
+
+    <script>
+      var submitForm = function(data) {
+        $.ajax({
+          url: '/createManagedAccount',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function() {
+            alert('Form submitted!')
+          },
+          error: function(err) {
+            console.error('error in POST request in payments.html', data);
+          }
+        });
+      };
+
+      $(".form").on("submit", function(event) {
+        event.preventDefault();
+        console.log($(this).serialize());
+        var formData = $(this).serialize().split('+').join(' ')
+        .split('&').map(function(item) {
+          return item.split('=');
+        })
+        .reduce(function(acc, curr, index, arr) {
+          acc[curr[0]] = curr[1];
+          return acc;
+        }, {});
+        submitForm(formData);
+      });
+    </script>
+  </body>
+</html>

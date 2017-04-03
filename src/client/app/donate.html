@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Donate</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles-david.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
+  <body class="donate">
+    <form>
+    <div>
+      <span style="font-weight:bold">Enter payment information</span>
+      <br/><br/>
+    </div>
+      <div class="group">
+        <label>
+          <span>Organizer</span>
+          <input name="cardholder-name" class="field" placeholder="Jane Doe" />
+        </label>
+        <label>
+          <span>Your Name</span>
+          <input class="field" placeholder="John Doe" />
+        </label>
+        <label>
+          <span>Phone</span>
+          <input class="field" placeholder="(123) 456-7890" type="tel" />
+        </label>
+      </div>
+      <div class="group">
+        <label>
+          <span>Card</span>
+          <div id="card-element" class="field"></div>
+        </label>
+      </div>
+      <button type="submit">Pay $5</button>
+      <div class="outcome">
+        <div class="error"></div>
+        <div class="success">
+        </div>
+      </div>
+    </form>
+
+    <script>
+      var stripe = Stripe("pk_test_CRMdrE0VHQluAFOoUltiyYb6");
+      var elements = stripe.elements();
+
+      var card = elements.create('card', {
+        style: {
+          base: {
+            iconColor: '#666EE8',
+            color: '#31325F',
+            lineHeight: '40px',
+            fontWeight: 300,
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSize: '15px',
+
+            '::placeholder': {
+              color: '#CFD7E0',
+            },
+          },
+        }
+      });
+      card.mount('#card-element');
+
+      function setOutcome(result) {
+        var successElement = document.querySelector('.success');
+        var errorElement = document.querySelector('.error');
+        successElement.classList.remove('visible');
+        errorElement.classList.remove('visible');
+
+        if (result.token) {
+          // Use the token to create a charge or a customer
+          // https://stripe.com/docs/charges
+          $.ajax({
+            url: '/checkout',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(result.token),
+            success: function(data) {
+              console.log('success in POST request in donate.html', result.token);
+              alert('Payment sent!')
+            },
+            error: function(err) {
+              console.error('error in POST request in donate.html', result.token);
+            }
+          });
+
+          successElement.querySelector('.token').textContent = result.token.id;
+          successElement.classList.add('visible');
+        } else if (result.error) {
+          errorElement.textContent = result.error.message;
+          errorElement.classList.add('visible');
+        }
+      }
+
+      card.on('change', function(event) {
+        setOutcome(event);
+      });
+
+      document.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var form = document.querySelector('form');
+        var extraDetails = {
+          name: form.querySelector('input[name=cardholder-name]').value,
+        };
+        stripe.createToken(card, extraDetails).then(setOutcome);
+      });
+    </script>
+  </body>
+</html>
