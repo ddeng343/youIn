@@ -67,6 +67,7 @@ class FriendEventOverview extends React.PureComponent {
           <input type='text' value={this.state.donation} 
             onChange={this.onDonationChanged.bind(this)} />
         </div>
+        <div><input type='submit' value='Send RVSP'/>TODO: link to a state update function</div>
         <div className='whosIn'>
           <h3>Who's In?</h3>
           <ul>
