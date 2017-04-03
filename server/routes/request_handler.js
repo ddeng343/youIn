@@ -12,3 +12,6 @@ module.exports.deleteOwnerEvent = require('./delete_owner_event');
 module.exports.checkStatus = require('./check_status');
 module.exports.sendSms = require('./send_sms');
 module.exports.confirmedUsers = require('./confirmed_users');
+module.exports.saveMessage = require('./save_message');
+module.exports.getMessages = require('./get_messages');
+

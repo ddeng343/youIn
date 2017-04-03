@@ -13,10 +13,14 @@ class Message extends React.Component {
 
     return(
       <li class='chatMessage'>
-        <img src={msg.photourl}/>
-          <div className='msgTopBar'>
-            <TimeAgo className='msgTime' date={msg.created}/>
-            <p className='usernameTopBar'>{msg.name}</p>
+        <div className='msgTopBar'>
+          <img src={msg.photourl}/>
+            <div className='msgTop'>
+              <div className='topBarStack'>
+                <TimeAgo className='msgTime stackItem' date={msg.created}/>
+                <p className='usernameTopBar stackItem'>{msg.name}</p>
+              </div>
+            </div>
           </div>
             <span>
             </span>

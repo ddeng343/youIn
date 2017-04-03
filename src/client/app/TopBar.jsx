@@ -62,6 +62,7 @@ class TopBar extends React.Component{
               {this.state.percentage}% Complete
             </div>
           </div>
+          <LogoutButton />
         </div>
       )
     } else {

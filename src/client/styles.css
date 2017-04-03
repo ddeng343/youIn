@@ -43,7 +43,7 @@
 }
 
 body {
-  /*background: url(./media_lib/campfire-984020_1920.jpg) no-repeat center center fixed;*/
+  background: url(./media_lib/campfire-984020_1920.jpg) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -79,7 +79,10 @@ p, li {
   color: white;
     /*text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;*/
   font-family: 'Kanit', sans-serif;
+}
 
+ul {
+  padding: 0;
 }
 
 .create {
@@ -292,6 +295,8 @@ h3.sendText {
   background-color: antiquewhite;
   height: 100%;
   border-left: 2px double black;
+  padding: 0;
+  margin: 0;
 }
 
 .col-sm-12.accountMyEvents {
@@ -337,6 +342,7 @@ h3.sendText {
 
 .friendsNameList li, .flexRowTop h2 {
   color: black;
+  text-align: center;
 }
 
 .progress {
@@ -364,3 +370,100 @@ h3.sendText {
    padding-left: 10em;
 }
 
+li.displayChatNames {
+  color: black;
+}
+
+li img {
+  height: 2em;
+  /*margin: 0.5em;*/
+  border-radius: 10%;
+}
+
+li {
+  list-style: none;
+}
+
+p.msgContent{
+  display: inline;
+  font-size: 1.2em;
+}
+
+.msgTime{
+  display: block;
+  padding: 0;
+  margin: 0;
+  color: darkslategrey;
+  font-size: 0.7em;
+}
+
+ul.flexRowMiddle p {
+  color: black;
+  margin: 0;
+}
+.msgTopBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.msgTopBar img{
+  flex: 0 1 auto;
+}
+.msgTop{
+  flex: auto;
+}
+ul.flexRowMiddle li {
+}
+ul.flexRowMiddle li:nth-child(odd) {
+  background-color: rgba(199, 216, 199, 0.53)
+}
+.col-md-12 h4 {
+  text-align: center;
+}
+.chatFlexBottom{
+  flex: 0 1 auto;
+  min-height: auto;
+  /*border: 1 white solid;*/
+  background-color: rgba(255, 255, 255, 0.68);
+  /*padding: 1em;*/
+}
+
+/*.flexRowTop{
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.flexRowMiddle{
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}*/
+
+.flexRowBottom{
+  display: flex;
+  align-items: stretch;
+}
+
+input.chatFlex4-5{
+  flex: 1 1 auto;
+  padding: 1em;
+}
+
+input.chatFlex1-5{
+  flex: 0 1 auto;
+}
+
+.displayChatNames{
+  flex: 0 1 auto;
+}
+
+input.chatFlex1-5 {
+  background-color: cornflowerblue;
+}
+
+input.chatFlex1-5:hover {
+  background-color: cornflowerblue;
+  color: white;
+}
