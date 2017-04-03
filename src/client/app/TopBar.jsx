@@ -59,7 +59,7 @@ class TopBar extends React.Component{
           <h1>#{this.props.event.title}</h1>
           <div className="progress">
             <div className="progress-bar" role="progressbar" aria-valuenow={this.state.percentage} aria-valuemin="0" aria-valuemax="100" style={{width: this.state.percentage + '%'}}>
-              {this.state.percentage}% Complete
+              {this.state.percentage}% Accepted
             </div>
           </div>
         </div>
