@@ -32,7 +32,7 @@ app.use('/', express.static(path.join(__dirname, '../src/client')));
 
 app.get('/events', passport.authenticate('facebook-token'), handler.getEvents);
 
-app.get('/confirmedUsers', passport.authenticate('facebook-token'), handler.confirmedUsers);
+app.post('/confirmedUsers', passport.authenticate('facebook-token'), handler.confirmedUsers);
 
 app.get('/users', handler.getUsers);
 

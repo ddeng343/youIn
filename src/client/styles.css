@@ -341,7 +341,7 @@ h3.sendText {
 
 .progress {
   width: 20%;
-  float: right;
+  float: center;
 }
 
 .glyphicon-plus-sign {
@@ -352,5 +352,15 @@ h3.sendText {
 
 .glyphicon-plus-sign:hover {
   color: cornflowerblue;
+}
+
+.topBar h1 {
+  color: black;
+  display: inline;
+}
+
+.logoutButton {
+   float: right;
+   padding-left: 10em;
 }
 

@@ -118,7 +118,7 @@ class Homepage extends React.Component {
 
            {/* -------TOPBAR------- */}
           <div className='col-sm-12 topbar'>
-            <TopBar event={this.state.currentEvent} confirmedUsers={this.props.confirmedUsers} getConfirmedUsers={this.props.getConfirmedUsers} owner={this.props.friends[0]}/>
+            <TopBar event={this.state.currentEvent} owner={this.props.friends[0]}/>
           </div>
 
           <div className='mainviewWrapper'>
