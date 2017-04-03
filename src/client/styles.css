@@ -340,9 +340,17 @@ h3.sendText {
   display: inline;
 }
 
-.friendsNameList li, .flexRowTop h2 {
+.whosIn, .friendsNameList li, .flexRowTop h2 {
   color: black;
   text-align: center;
+}
+
+.whosIn {
+  font-weight: bold;
+}
+
+ul li img {
+    height: 3em;
 }
 
 .progress {
@@ -410,9 +418,11 @@ ul.flexRowMiddle p {
 .msgTopBar img{
   flex: 0 1 auto;
 }
+
 .msgTop{
   flex: auto;
 }
+
 ul.flexRowMiddle li {
 }
 ul.flexRowMiddle li:nth-child(odd) {
@@ -467,3 +477,22 @@ input.chatFlex1-5:hover {
   background-color: cornflowerblue;
   color: white;
 }
+
+.linkLookalike {
+  color: cornflowerblue;
+  text-decoration: underline;
+}
+
+.friendsTable {
+  margin-left: 0;
+  padding-left: 0;
+  color: black;
+  list-style: none;
+  height: 3em;
+  display: block;
+}
+
+.remindButton {
+  margin: 5px;
+}
+

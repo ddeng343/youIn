@@ -1,5 +1,5 @@
 import React from 'react';
-import Chat from './ChatCopy.jsx';
+import Chat from './Chat.jsx';
 import TopBar from './TopBar.jsx';
 import CreateEvent from './CreateEvent.jsx';
 import EventOverview from './EventOverview.jsx';

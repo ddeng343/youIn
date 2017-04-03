@@ -1,4 +1,6 @@
 import React from 'react';
+import $ from 'jquery';
+import AttendeeTable from './AttendeeTable.jsx';
 
 class EventOverview extends React.PureComponent {
   constructor(props) {
@@ -79,34 +81,24 @@ class EventOverview extends React.PureComponent {
   render() {
     const event = this.props.event;
     const date = this.props.event ? this.props.event.date.slice(0, 10) : undefined;
-    console.log('EVENT', event);
     return (
       <div className='EventOverviewWrapper'>
         <div className='eventDetails'>
-        <h4>Title: {event.title}</h4>
-        <h4>Location: {event.location}</h4>
-        <h4>Date: {date}</h4>
-        <h4>Type: {event.short_desc}</h4>
-        <h4>Description: {event.description}</h4>
-        <a href='#' onClick={this.updateEventDetails}>Update</a>
-
+          <h4>Title: {event.title}</h4>
+          <h4>Location: {event.location}</h4>
+          <h4>Date: {date}</h4>
+          <h4>Time: {event.time}</h4>
+          <h4>Type: {event.short_desc}</h4>
+          <h4>Description: {event.description}</h4>
+          <h5 className="linkLookalike" onClick={this.updateEventDetails}>Update</h5>
         </div>
 
-        <div className='whosIn'>
-        <ul>
-            <li>MIKE</li>
-            <li>ED</li>
-            <li>BETH</li>
-          </ul>
-          <h4>Add Friends</h4>
-        </div>
-
-        <div className='reminders'>
+        <div className='reminders col-md-12'>
           {!this.state.remindButtonClicked
             ? <button 
                 onClick={this.handleRemindClick} 
                 id="owner-delete-button" 
-                className="col-md-offset-1"
+                className="col-md-offset-1 remindButton"
                 >
                 Send event reminders to group now
               </button>
@@ -115,6 +107,14 @@ class EventOverview extends React.PureComponent {
               </h3>
           }
         </div>
+        
+        <div className='whosIn col-md-12'>
+          <h2 className='whosIn'> Who's In? </h2>
+          <div className="col-md-12">
+            <AttendeeTable attendees={event.attendees}/>
+          </div>
+        </div>
+
       </div>
     );
   }
