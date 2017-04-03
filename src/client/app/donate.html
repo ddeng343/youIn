@@ -11,53 +11,106 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
-    <script src="https://checkout.stripe.com/checkout.js"></script>
   </head>
   <body class="donate">
-    <form id="form">
-      <button type="submit" id="customButton">Donate</button>
-      <script>
+    <form>
+    <div>
+      <span style="font-weight:bold">Enter payment information</span>
+      <br/><br/>
+    </div>
+      <div class="group">
+        <label>
+          <span>Organizer</span>
+          <input name="cardholder-name" class="field" placeholder="Jane Doe" />
+        </label>
+        <label>
+          <span>Your Name</span>
+          <input class="field" placeholder="John Doe" />
+        </label>
+        <label>
+          <span>Phone</span>
+          <input class="field" placeholder="(123) 456-7890" type="tel" />
+        </label>
+      </div>
+      <div class="group">
+        <label>
+          <span>Card</span>
+          <div id="card-element" class="field"></div>
+        </label>
+      </div>
+      <button type="submit">Pay $5</button>
+      <div class="outcome">
+        <div class="error"></div>
+        <div class="success">
+        </div>
+      </div>
+    </form>
 
-      // data-image="images/button.png"
+    <script>
+      var stripe = Stripe("pk_test_CRMdrE0VHQluAFOoUltiyYb6");
+      var elements = stripe.elements();
 
-      var handler = StripeCheckout.configure({
-        key: 'pk_test_CRMdrE0VHQluAFOoUltiyYb6',
-        image: "https://scontent.xx.fbcdn.net/v/t1.0-1/c43.43.538.538/s320x320/216134_339959052763134_2145748467_n.jpg?oh=d55b4594e29ff41461e005dc841f0f86&oe=59582226",
-        locale: 'auto',
-        billingAddress: false,
-        token: function(token) {
-          // You can access the token ID with `token.id`.
-          // Get the token ID to your server-side code for use.
+      var card = elements.create('card', {
+        style: {
+          base: {
+            iconColor: '#666EE8',
+            color: '#31325F',
+            lineHeight: '40px',
+            fontWeight: 300,
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSize: '15px',
+
+            '::placeholder': {
+              color: '#CFD7E0',
+            },
+          },
+        }
+      });
+      card.mount('#card-element');
+
+      function setOutcome(result) {
+        var successElement = document.querySelector('.success');
+        var errorElement = document.querySelector('.error');
+        successElement.classList.remove('visible');
+        errorElement.classList.remove('visible');
+
+        if (result.token) {
+          // Use the token to create a charge or a customer
+          // https://stripe.com/docs/charges
           $.ajax({
             url: '/checkout',
             method: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify(token),
-            success: function() {
-              console.log('success in POST request in donate.html', token);
+            data: JSON.stringify(result.token),
+            success: function(data) {
+              console.log('success in POST request in donate.html', result.token);
+              alert('Payment sent!')
             },
             error: function(err) {
-              console.error('error in POST request in donate.html', token);
+              console.error('error in POST request in donate.html', result.token);
             }
           });
+
+          successElement.querySelector('.token').textContent = result.token.id;
+          successElement.classList.add('visible');
+        } else if (result.error) {
+          errorElement.textContent = result.error.message;
+          errorElement.classList.add('visible');
         }
+      }
+
+      card.on('change', function(event) {
+        setOutcome(event);
       });
 
-      document.getElementById('customButton').addEventListener('click', function(e) {
-        // Open Checkout with further options:
-        handler.open({
-          name: 'youIn',
-          description: null,
-          amount: 500,
-        });
+      document.querySelector('form').addEventListener('submit', function(e) {
         e.preventDefault();
+        var form = document.querySelector('form');
+        var extraDetails = {
+          name: form.querySelector('input[name=cardholder-name]').value,
+        };
+        stripe.createToken(card, extraDetails).then(setOutcome);
       });
-
-      // Close Checkout on page navigation:
-      window.addEventListener('popstate', function() {
-        handler.close();
-      });
-      </script>
-    </form>
+    </script>
   </body>
 </html>

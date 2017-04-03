@@ -99,7 +99,11 @@ class Homepage extends React.Component {
       <div className="col-sm-3 account">
         <Account
               handleWantsEvent={this.handleWantsEvent}
+<<<<<<< HEAD
               handleWantsCreateEvent={this.handleWantsCreateEvent}
+=======
+              handleUserWantsEvent={this.handleUserWantsEvent}
+>>>>>>> (feat) Creating progress bar in top bar
               username={this.props.userName}
               friends = {this.props.friends}
               myEvents={this.props.ownerEvents}
@@ -114,7 +118,7 @@ class Homepage extends React.Component {
 
            {/* -------TOPBAR------- */}
           <div className='col-sm-12 topbar'>
-            <TopBar event={this.state.currentEvent} owner={this.props.friends[0]}/>
+            <TopBar event={this.state.currentEvent} confirmedUsers={this.props.confirmedUsers} getConfirmedUsers={this.props.getConfirmedUsers} owner={this.props.friends[0]}/>
           </div>
 
           <div className='mainviewWrapper'>
@@ -142,6 +146,10 @@ class Homepage extends React.Component {
           <div className="col-sm-3 account">
             <Account
               handleWantsEvent={this.handleWantsEvent}
+<<<<<<< HEAD
+=======
+              handleUserWantsEvent={this.handleUserWantsEvent}
+>>>>>>> (feat) Creating progress bar in top bar
               username={this.props.userName}
               friends = {this.props.friends}
               myEvents={this.props.ownerEvents}

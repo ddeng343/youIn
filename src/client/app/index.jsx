@@ -19,7 +19,8 @@ class App extends React.Component {
       userName: '',
       ownerEvents: [],
       friendEvents: [],
-      successfulLogin: false
+      successfulLogin: false,
+      confirmedUsers: []
     }
 
     this.getUsers = this.getUsers.bind(this);
@@ -27,6 +28,7 @@ class App extends React.Component {
     this.setName = this.setName.bind(this);
     this.setToken = this.setToken.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
+    this.getConfirmedUsers = this.getConfirmedUsers.bind(this);
   }
 
   componentDidMount() {
@@ -86,6 +88,27 @@ class App extends React.Component {
     });
   }
 
+  getConfirmedUsers(event_id) {
+    let context = this;
+
+    $.ajax({
+      url: '/confirmedUsers',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({event_id: event_id}),
+      success: function(data) {
+        console.log('successful request for confirmed users', data)
+
+        context.setState({
+          confirmedUsers: data
+        })
+      },
+      error: function(err) {
+        console.error('error in request for confirmed users', err);
+      }
+    })
+  }
+
   render () {
 
     if(!this.state.successfulLogin){
@@ -112,7 +135,9 @@ class App extends React.Component {
                 friendEvents={this.state.friendEvents} friends={this.state.friends}
                 accessToken={this.state.facebookToken} userName={this.state.userName}
                 history={props.history}
-                getEvents={this.getEvents}/>)
+                getEvents={this.getEvents}
+                getConfirmedUsers={this.getConfirmedUsers.bind(this)}
+                confirmedUsers={this.state.confirmedUsers}/>)
             }} />
           </div>
         </Router>

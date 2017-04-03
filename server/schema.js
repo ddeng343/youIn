@@ -34,6 +34,7 @@ module.exports = (db) => {
       lastname varChar(50),\
       photoUrl varChar(150),\
       email varChar(50),\
+      account_id varChar(50),\
       phoneNumber varChar(20));');
   })
   .then(() => {

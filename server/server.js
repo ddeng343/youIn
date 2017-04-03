@@ -32,6 +32,8 @@ app.use('/', express.static(path.join(__dirname, '../src/client')));
 
 app.get('/events', passport.authenticate('facebook-token'), handler.getEvents);
 
+app.get('/confirmedUsers', passport.authenticate('facebook-token'), handler.confirmedUsers);
+
 app.get('/users', handler.getUsers);
 
 app.post('/events/users', passport.authenticate('facebook-token'), handler.addUsersEvents);
@@ -61,10 +63,10 @@ app.get('/test', passport.authenticate('facebook-token'), function(req, res) {
 
 app.post('/sms/remind', handler.sendSms);
 
-// app.get('*', handler.wildCard);
+app.get('*', handler.wildCard);
 
 app.use('/donate', express.static(path.join(__dirname, '../src/client/app/donate.html')));
-app.use('/payments', express.static(path.join(__dirname, '../src/client/app/payments.html')));
+app.use('/createStripeAccount', express.static(path.join(__dirname, '../src/client/app/createStripeAccount.html')));
 
 
 // Set your secret key: remember to change this to your live secret key in production
@@ -99,7 +101,7 @@ app.post('/createManagedAccount', function(req, res) {
         year: 1986
       },
       first_name: organizer.name,
-      last_name: "",
+      last_name: "Deng",
       type: "individual",
       address: {
         line1: "1234 Main Street",
@@ -111,9 +113,6 @@ app.post('/createManagedAccount', function(req, res) {
     }
   }, function(err, account) {
     acct_ids[account.legal_entity.first_name] = account.id;
-    // console.log(req.body)
-    // console.log(acct_ids);
-    // console.log("CREATE ACCOUNT:", account);
   });
   res.end();
 });
@@ -121,16 +120,8 @@ app.post('/createManagedAccount', function(req, res) {
 app.get('/payments', function(req, res) {
   var transactions = stripe.balance.listTransactions({
     stripe_account: acct_ids["David"],
-    // type: 'charge'
   }, function(err, transactions) {
     // asynchronously called
-    console.log("transactions:", transactions.data);
-    // console.log("transactions:", transactions.data.filter(function(item) {
-    //   return item.type === 'charge';
-    // }).map(function(item) {
-    //   return item.description + ', ' + (item.amount);
-    // }));
-    // console.log("transactions:", transactions);
   });
   res.end();
 });
@@ -139,18 +130,18 @@ app.get('/payments', function(req, res) {
 
 app.post('/checkout', function(req, res) {
   var token = req.body.id;
+  var organizer = req.body.card.name;
+
   var charge = stripe.charges.create({
-    amount: 1000,
+    amount: 500,
     currency: "usd",
     description: "test payment",
     source: token,
-    destination: acct_ids["David"]
+    destination: acct_ids[organizer]
   }, function(err, charge) {
     // asynchronously called
-    console.log('success in POST request in server.js:', req.body)
-    // console.log("charge post,", acct_ids["David"])
-    res.end();
   });
+  res.end();
 })
 
 // io.on('connection', function (socket) {

@@ -9,9 +9,11 @@ class TopBar extends React.Component{
   }
   render(){
     if (this.props.event) {
-      return( 
+      return(
         <div className='topBar'>
-          <span>#{this.props.event.title}</span>
+          <span>#{JSON.stringify(this.props.event.event_id)}</span>
+          <span>{JSON.stringify(this.props.getConfirmedUsers)}</span>
+          <span>{'Confirmed Users: ' + this.props.confirmedUsers.length}</span>
           <div className="progress">
             <span className="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
               <span className="sr-only">60% Complete</span>

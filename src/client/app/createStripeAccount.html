@@ -12,7 +12,7 @@
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
   </head>
-  <body class="payment">
+  <body class="donate">
     <form class="form" action="/createManagedAccount" method="post">
       <div class="group">
         <div>
@@ -87,7 +87,7 @@
           contentType: 'application/json',
           data: JSON.stringify(data),
           success: function() {
-            console.log('success in POST request in payments.html', data);
+            alert('Form submitted!')
           },
           error: function(err) {
             console.error('error in POST request in payments.html', data);
@@ -97,13 +97,15 @@
 
       $(".form").on("submit", function(event) {
         event.preventDefault();
-        var formData = $(this).serialize().split('&').map(function(item) {
+        console.log($(this).serialize());
+        var formData = $(this).serialize().split('+').join(' ')
+        .split('&').map(function(item) {
           return item.split('=');
-        }).reduce(function(acc, curr, index, arr) {
+        })
+        .reduce(function(acc, curr, index, arr) {
           acc[curr[0]] = curr[1];
           return acc;
         }, {});
-        console.log(formData)
         submitForm(formData);
       });
     </script>
