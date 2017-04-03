@@ -39,6 +39,20 @@ module.exports = (db) => {
   })
   .then(() => {
 
+    return db.query('CREATE TABLE IF NOT EXISTS messages (\
+      id SERIAL PRIMARY KEY,\
+      event_id INT NOT NULL,\
+      event_owner BIGINT NOT NULL,\
+      message VARCHAR(1000) NOT NULL,\
+      created TIMESTAMP(8) default (now()),\
+      date DATE,\
+      photourl VARCHAR(255) NOT NULL,\
+      author_email VARCHAR(255) NOT NULL,\
+      author_id BIGINT NOT NULL,\
+      name VARCHAR(50) NOT NULL);')
+  })
+  .then(() => {
+
     return db.query('CREATE TABLE IF NOT EXISTS users_events (\
       event_id int not null,\
       user_id BIGINT not null,\

@@ -34,6 +34,10 @@ class Homepage extends React.Component {
       this.setState({
         currentEvent: this.props.friendEvents[0]
       })
+    } else {
+      this.setState({
+        createEvent: true
+      })
     }
   }
 

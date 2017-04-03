@@ -14,7 +14,7 @@ class EventListItem extends React.Component {
   render() {
     return (
       <div className='eventListItem'>
-        <li onClick={this.handleEventClick}> {this.props.event.description}
+        <li onClick={this.handleEventClick}> {this.props.event.title}
         </li>
       </div>
     );

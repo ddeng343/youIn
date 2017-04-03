@@ -15,7 +15,7 @@ class EventOverview extends React.PureComponent {
 
   render(){
     const event = this.props.event;
-    const date = this.props.event.date.slice(0,10);
+    const date = this.props.event ? this.props.event.date.slice(0,10) : undefined;
     console.log('EVENT', event)
     return(
       <div className='EventOverviewWrapper'>
@@ -30,7 +30,7 @@ class EventOverview extends React.PureComponent {
         </div>
 
         <div className='whosIn'>
-          <ul>
+        <ul>
             <li>MIKE</li>
             <li>ED</li>
             <li>BETH</li>

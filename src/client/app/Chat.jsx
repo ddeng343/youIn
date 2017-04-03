@@ -1,5 +1,7 @@
 import React from 'react';
-var socket = require('socket.io-client');
+import Message from './Message.jsx';
+import io from 'socket.io-client';
+let socket = io();
 
 class Chat extends React.Component{
   constructor(props){
@@ -11,28 +13,27 @@ class Chat extends React.Component{
     //bind functions
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
-    this.createSocketConnection = this.createSocketConnection.bind(this);
+    this.createSocketListener = this.createSocketListener.bind(this);
   }
 
   componentDidMount(){
-    this.createSocketConnection()
+    this.createSocketListener()
   }
 
-  createSocketConnection(){
-    // var socket = io();
-    // var context = this;
-    // //listening for 'chat message', setting state
-
-    // socket.on('messages', (msg) => {
-    //   console.log('messages', msg);
-    //   let messages = context.state.messages;
-    //   messages = msg;
-    //   console.log('messages', messages);
-    //   context.setState({
-    //     messages: messages
-    //   })
-    // });
-
+  createSocketListener(){
+    var context = this;
+    //listening for 'chat message', setting state
+    socket.on('messages', (msg) => {
+      console.log('messages', msg);
+      let messages = context.state.messages;
+      messages = msg;
+      console.log('messages', messages);
+      context.setState({
+        messages: messages
+      })
+    });
+    //GET MESSAGES ON LOAD
+    socket.emit('getMessages', this.props.event.event_id);
   }
 
   handleFormSubmit(event){
@@ -41,20 +42,22 @@ class Chat extends React.Component{
 
     let context = this;
     let author = this.props.owner;
+    let name = author.firstname + ' ' + author.lastname;
     console.log('author', author);
-    console.log('inside form event');
-    // var socket = io();
-    // var message = {
-    //   event_id: 3,
-    //   event_owner: 234234234,
-    //   message: this.state.message,
-    //   photourl: author.photourl,
-    //   author_id: author.user_id,
-    //   author_email: author.email,
-    // }
+    var socket = io();
+    var message = {
+      event_id: this.props.event.event_id,
+      event_owner: this.props.event.owner,
+      message: this.state.message,
+      photourl: author.photourl,
+      author_id: author.user_id,
+      author_email: author.email,
+      name: name
+    }
 
-    // //route and message to send to server
-    // socket.emit('chat', message);
+    console.log('message', message);
+    //route and message to send to server
+    socket.emit('chat', message);
 
     this.setState({
       message: ''
@@ -83,14 +86,14 @@ class Chat extends React.Component{
       <div className='chatFlexMiddle'>
         <ul className='flexRowMiddle'>
           {this.state.messages.map(message =>
-            <li className='displayChatNames' key={message.message}>{message.message}</li>
+            <Message className='displayChatNames' key={message.id} message={message}/>
           )}
         </ul>
       </div>
 
       <div className='chatFlexBottom'>
         <div className='flexRowBottom'>
-          <input type='text' className='chatFlex4-5' onChange={this.handleTextChange} value={this.state.message} placeholder='chat with friends' />
+          <input type='text' className='chatFlex4-5' onChange={this.handleTextChange} value={this.state.message} placeholder='chat with group' />
           <input type='submit' className='chatFlex1-5' />
         </div>
       </div>
