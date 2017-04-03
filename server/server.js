@@ -29,6 +29,8 @@ app.use(passport.session());
 
 
 app.use('/', express.static(path.join(__dirname, '../src/client')));
+app.use('/donate', express.static(path.join(__dirname, '../src/client/app/donate.html')));
+app.use('/createStripeAccount', express.static(path.join(__dirname, '../src/client/app/createStripeAccount.html')));
 
 app.get('/events', passport.authenticate('facebook-token'), handler.getEvents);
 
@@ -64,9 +66,6 @@ app.get('/test', passport.authenticate('facebook-token'), function(req, res) {
 app.post('/sms/remind', handler.sendSms);
 
 app.get('*', handler.wildCard);
-
-app.use('/donate', express.static(path.join(__dirname, '../src/client/app/donate.html')));
-app.use('/createStripeAccount', express.static(path.join(__dirname, '../src/client/app/createStripeAccount.html')));
 
 
 // Set your secret key: remember to change this to your live secret key in production
